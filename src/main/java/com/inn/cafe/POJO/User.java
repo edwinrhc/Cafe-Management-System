@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 
 @NamedQuery(name="User.findByEmailId", query="select u from  User u where u.email=:email")
-
+// Data se realizar el get y el set
 @Data
 @Entity
 @DynamicUpdate
