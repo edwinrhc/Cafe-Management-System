@@ -139,4 +139,70 @@ public class ProductServiceImpl implements ProductService {
         return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    /* Primera Opción de actualizar */
+   @Override
+    public ResponseEntity<String> updateStatus(Map<String, String> requestMap) {
+        try{
+            if(jwtFilter.isAdmin()){
+                Optional optional = productDao.findById(Integer.parseInt(requestMap.get("id")));
+                if(!optional.isEmpty()){
+                    productDao.updateProductStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
+                    return CafeUtils.getResponseEntity("Product Sttus Updated Successfully", HttpStatus.OK);
+                }
+                return CafeUtils.getResponseEntity("Product id does not exist",HttpStatus.OK);
+            }else{
+                return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS,HttpStatus.UNAUTHORIZED);
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    /* Segunda opción de actualizar estado por ID
+    public ResponseEntity<String> updateStatus(Map<String,String> requestMap){
+        try{
+            if(jwtFilter.isAdmin()){
+                Integer productId = Integer.parseInt(requestMap.get("id"));
+                Optional<Product> optionalProduct = productDao.findById(productId);
+
+                if(optionalProduct.isPresent()){
+                    Product product = optionalProduct.get();
+                    product.setStatus(requestMap.get("status"));
+                    productDao.save(product); // Esto guardará la entidad actual
+                    return CafeUtils.getResponseEntity("Product Status Updated Successfully", HttpStatus.OK);
+                }else {
+                    return CafeUtils.getResponseEntity("Product ID does not exist",HttpStatus.OK);
+                }
+            }else{
+                return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS,HttpStatus.UNAUTHORIZED);
+                }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+    } */
+
+    @Override
+    public ResponseEntity<List<ProductWrapper>> getByCategory(Integer id) {
+
+        try{
+            return new ResponseEntity<>(productDao.getProductByCategory(id),HttpStatus.OK);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(),HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<ProductWrapper> getProductById(Integer id) {
+        try{
+            return new ResponseEntity<>(productDao.getProductById(id),HttpStatus.OK);
+        }catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ProductWrapper(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
 }
