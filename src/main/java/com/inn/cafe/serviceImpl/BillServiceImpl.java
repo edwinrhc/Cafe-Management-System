@@ -73,6 +73,7 @@ public class BillServiceImpl implements BillService {
                 document.add(table);
                 Paragraph footer = new Paragraph("Total : "+ requestMap.get("totalAmount")+"\n"
                         + "Thank you for visiting. Please visit again!!", getFont("Data"));
+                document.add(footer);
                 document.close();
                 return new ResponseEntity<>("{\"uuid\":\""+fileName+"\"}",HttpStatus.OK);
             }
@@ -133,7 +134,7 @@ public class BillServiceImpl implements BillService {
         rect.enableBorderSide(2);
         rect.enableBorderSide(4);
         rect.enableBorderSide(8);
-        rect.setBackgroundColor(BaseColor.BLACK);
+        rect.setBorderColor(BaseColor.BLACK);
         rect.setBorderWidth(1);
         document.add(rect);
     }
@@ -147,7 +148,7 @@ public class BillServiceImpl implements BillService {
             bill.setContactNumber((String) requestMap.get("contacatNumber"));
             bill.setPaymentMethod((String) requestMap.get("paymentMethod"));
             bill.setTotal(Integer.parseInt((String) requestMap.get("totalAmount")));
-            bill.setProductDetail((String) requestMap.get("productDetails"));
+            bill.setProductDetails((String) requestMap.get("productDetails"));
             bill.setCreatedBy(jwtFilter.getCurrentUser());
             billDao.save(bill);
         } catch (Exception ex) {
